@@ -68,31 +68,64 @@ export function ProductExplorer({ products }: { products: ProductRow[] }) {
 
   return (
     <div className="mt-6">
-      <div className="mb-4 flex flex-wrap gap-3">
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search products…"
-          className="w-full max-w-xs rounded-lg border px-3 py-2 text-sm outline-none"
-          style={{ borderColor: "var(--border)", background: "var(--surface-1)", color: "var(--text-primary)" }}
-        />
-        <select
-          value={retailer}
-          onChange={(e) => setRetailer(e.target.value)}
-          className="rounded-lg border px-3 py-2 text-sm outline-none"
-          style={{ borderColor: "var(--border)", background: "var(--surface-1)", color: "var(--text-primary)" }}
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <div className="relative w-full max-w-xs">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path strokeLinecap="round" d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search products…"
+            className="w-full rounded-lg border py-2 pl-9 pr-3 text-sm outline-none transition-colors focus:border-[var(--border-strong)]"
+            style={{ borderColor: "var(--border)", background: "var(--surface-1)", color: "var(--text-primary)" }}
+          />
+        </div>
+
+        <div
+          className="inline-flex rounded-lg border p-0.5 text-sm"
+          style={{ borderColor: "var(--border)", background: "var(--surface-1)" }}
         >
-          <option value="all">All retailers</option>
+          <button
+            onClick={() => setRetailer("all")}
+            className="rounded-md px-2.5 py-1.5 transition-colors"
+            style={{
+              background: retailer === "all" ? "var(--surface-hover)" : "transparent",
+              color: retailer === "all" ? "var(--text-primary)" : "var(--text-secondary)",
+            }}
+          >
+            All
+          </button>
           {retailers.map((r) => (
-            <option key={r.slug} value={r.slug}>
+            <button
+              key={r.slug}
+              onClick={() => setRetailer(r.slug)}
+              className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors"
+              style={{
+                background: retailer === r.slug ? "var(--surface-hover)" : "transparent",
+                color: retailer === r.slug ? "var(--text-primary)" : "var(--text-secondary)",
+              }}
+            >
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: retailerColor(r.slug) }} />
               {r.name}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
+
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="rounded-lg border px-3 py-2 text-sm outline-none"
+          className="rounded-lg border px-3 py-2 text-sm outline-none transition-colors focus:border-[var(--border-strong)]"
           style={{ borderColor: "var(--border)", background: "var(--surface-1)", color: "var(--text-primary)" }}
         >
           <option value="all">All categories</option>
@@ -102,6 +135,7 @@ export function ProductExplorer({ products }: { products: ProductRow[] }) {
             </option>
           ))}
         </select>
+
         <div className="ml-auto self-center text-sm" style={{ color: "var(--text-muted)" }}>
           {filtered.length.toLocaleString()} shown
         </div>
@@ -123,7 +157,11 @@ export function ProductExplorer({ products }: { products: ProductRow[] }) {
           </thead>
           <tbody>
             {filtered.slice(0, 400).map((p) => (
-              <tr key={`${p.retailerSlug}-${p.id}`} style={{ borderBottom: "1px solid var(--gridline)" }}>
+              <tr
+                key={`${p.retailerSlug}-${p.id}`}
+                className="transition-colors hover:bg-[var(--surface-hover)]"
+                style={{ borderBottom: "1px solid var(--gridline)" }}
+              >
                 <td className="px-4 py-3">
                   <a
                     href={p.url}

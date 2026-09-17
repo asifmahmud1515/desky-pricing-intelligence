@@ -4,25 +4,34 @@ export function StatTile({
   delta,
   deltaGoodDirection = "down",
   sub,
+  accent = "var(--series-desky)",
 }: {
   label: string;
   value: string;
   delta?: string | null;
   deltaGoodDirection?: "up" | "down";
   sub?: string;
+  accent?: string;
 }) {
   const isPositive = delta?.trim().startsWith("+");
   const isGood = delta != null && (deltaGoodDirection === "down" ? !isPositive : isPositive);
 
   return (
     <div
-      className="rounded-xl border p-5"
+      className="group relative overflow-hidden rounded-xl border p-5 transition-colors hover:border-[var(--border-strong)]"
       style={{ borderColor: "var(--border)", background: "var(--surface-1)" }}
     >
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
+        style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
+      />
       <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
         {label}
       </div>
-      <div className="mt-2 text-3xl font-semibold" style={{ color: "var(--text-primary)" }}>
+      <div
+        className="mt-2 text-3xl font-semibold tabular-nums"
+        style={{ color: "var(--text-primary)" }}
+      >
         {value}
       </div>
       {(delta || sub) && (
